@@ -8,171 +8,151 @@
 
 ---
 
-## 📌 Executive Overview
+## 📌 Executive Summary
 
-This repository contains the complete end-to-end deliverables for the **HanuAi Machine Learning Assessment**. It demonstrates production-level competencies across data engineering, resilient web scraping, NLP text mining, unsupervised machine learning, and executive data storytelling across two core tasks:
+This repository contains the complete end-to-end deliverables for the **HanuAi Machine Learning Assessment**. It demonstrates production-level competencies across web scraping, NLP text mining, unsupervised machine learning, and executive data storytelling:
 
-1. **Task 1: Resilient Web Scraping & Multi-Stage Sentiment Analysis**
-   - High-stealth headless scraping on **BestBuy Canada** for **Sony WH-1000XM5 Noise Cancelling Headphones** across sort filters and dynamic pagination.
-   - Dual-engine sentiment analysis comparing lexicon rule-based scoring (VADER) and deep learning zero-shot classification (`facebook/bart-large-mnli`), paired with aspect-level customer experience tagging.
-   - Comprehensive technical documentation on anti-scraping mitigation strategies (IP blocking, CAPTCHA bypass, exponential backoff) and customer intelligence drivers.
-
-2. **Task 2: Advanced EDA, Text Mining & Unsupervised Failure Mode Clustering**
-   - In-depth statistical EDA on **508 road and infrastructure maintenance records** across 8 Canadian provinces.
-   - Entity and keyword extraction leveraging **spaCy NER**, rule-based pattern matching, and TF-IDF to identify damaged components and failure symptoms.
-   - Unsupervised clustering (**K-Means**) evaluated via Elbow and Silhouette metrics, projected in 2D space using TruncatedSVD/PCA, mapping root causes to CAD $110.9M in estimated repair costs.
-   - Actionable stakeholder report with prioritized recommendations, projected cost-benefit ratios, and operational governance frameworks.
+- **Task 1: Web Scraping & Sentiment Analysis** — Production-ready scraper targeting **BestBuy Canada** for **Sony WH-1000XM5 Headphones** with anti-bot stealth mechanisms, dual-stage sentiment analysis (VADER Lexicon + Transformer zero-shot classification), aspect tagging, and technical documentation.
+- **Task 2: Advanced EDA & Text Mining** — Statistical data cleansing, exploratory analysis, NLP entity extraction (spaCy), and unsupervised clustering (**K-Means**, $K=7$) on a 508-record Canadian infrastructure maintenance dataset representing **CAD $110.9M** in asset repair costs.
 
 ---
 
 ## 📑 Table of Contents
 
-- [Executive Overview](#-executive-overview)
-- [Repository Structure](#-repository-structure)
-- [Task 1: Web Scraping & Sentiment Analysis](#-task-1-web-scraping--sentiment-analysis)
-  - [Scraper Architecture & Anti-Bot Stealth](#scraper-architecture--anti-bot-stealth)
-  - [Sentiment Pipeline & Aspect Tagging](#sentiment-pipeline--aspect-tagging)
-  - [Task 1 Key Findings](#task-1-key-findings)
-- [Task 2: Advanced EDA, Text Mining & Clustering](#-task-2-advanced-eda-text-mining--clustering)
-  - [Data Pipeline & Quality Engineering](#data-pipeline--quality-engineering)
-  - [Exploratory Data Analysis Highlights](#exploratory-data-analysis-highlights)
-  - [Text Mining & Component Extraction](#text-mining--component-extraction)
-  - [Unsupervised Failure Mode Clustering](#unsupervised-failure-mode-clustering)
-- [Summary of Artifacts & Results](#-summary-of-artifacts--results)
-- [Quickstart & Reproduction Guide](#-quickstart--reproduction-guide)
-- [Assessment Rubric Compliance Checklist](#-assessment-rubric-compliance-checklist)
-- [Author & Submission Details](#-author--submission-details)
+1. [Repository Structure](#-repository-structure)
+2. [Task 1: Web Scraping & Sentiment Analysis](#-task-1-web-scraping--sentiment-analysis)
+   - [Scraper Architecture & Anti-Bot Strategies](#scraper-architecture--anti-bot-strategies)
+   - [Sentiment Pipeline & Aspect Tagging](#sentiment-pipeline--aspect-tagging)
+   - [Key Consumer Insights](#key-consumer-insights)
+3. [Task 2: Advanced EDA & Text Mining](#-task-2-advanced-eda--text-mining)
+   - [Data Cleaning & Schema](#data-cleaning--schema)
+   - [Statistical EDA Highlights](#statistical-eda-highlights)
+   - [NLP Entity Extraction & Text Mining](#nlp-entity-extraction--text-mining)
+   - [Unsupervised Failure Clustering](#unsupervised-failure-clustering)
+4. [Master Deliverables Table](#-master-deliverables-table)
+5. [Setup & Reproduction Guide](#-setup--reproduction-guide)
+6. [Assessment Checklist](#-assessment-checklist)
+7. [Submission Details](#-submission-details)
 
 ---
 
 ## 🗂️ Repository Structure
 
 ```text
-HanuAi-ML-Assessment/
+d:\HanuAi ML Assessment\
 │
-├── README.md                                  # Repository documentation & guide (this file)
+├── README.md                                  # Master repository documentation (this file)
 │
-├── 📂 Task 1 — Web Scraping & Sentiment Analysis
-│   ├── Task1_WebScraping_SentimentAnalysis.ipynb # Annotated Jupyter notebook (scraper + NLP pipeline)
-│   ├── Task1_Report.md                         # Anti-scraping mitigation & customer intelligence report
-│   ├── bestbuy_reviews_raw.csv                 # Raw scraped reviews (7 mandatory fields)
+├── 📁 Task 1: Web Scraping & Sentiment Analysis
+│   ├── Task1_WebScraping_SentimentAnalysis.ipynb # Complete Jupyter Notebook (Scraper + NLP)
+│   ├── Task1_Report.md                         # Anti-scraping mitigation & business insights
+│   ├── bestbuy_reviews_raw.csv                 # Raw extracted reviews (7 mandatory fields)
 │   ├── bestbuy_reviews_sentiment.csv           # Enriched dataset with VADER scores & aspect tags
 │   ├── bestbuy_reviews_sentiment.xlsx          # Formatted Excel delivery
 │   ├── task1_rating_distribution.png           # Visual: Star rating distribution
 │   ├── task1_sentiment_by_rating.png           # Visual: VADER polarity vs. Star rating boxplot
 │   └── task1_aspect_sentiment.png              # Visual: Aspect-based sentiment breakdown
 │
-├── 📂 Task 2 — Advanced EDA & Text Mining
-│   ├── Task2_EDA_TextMining_Clustering.ipynb   # Complete pipeline notebook (EDA, NLP, K-Means)
-│   ├── Task2_Stakeholder_Report.md             # Executive & stakeholder report with real metrics
-│   ├── Task2_Road_Maintenance_Dataset.xlsx     # 508-record road & infrastructure maintenance dataset
-│   ├── Task2_EDA_Text_Mining_Output.csv        # Enriched dataset with component tags & cluster labels
-│   ├── Task2_EDA_Text_Mining_Output.xlsx       # Formatted multi-tab Excel delivery
-│   ├── task2_failure_severity.png              # Visual: Failure mode frequency by severity
-│   ├── task2_regional_asset.png                # Visual: Incident geographic distribution
-│   ├── task2_cost_analysis.png                 # Visual: Cost distributions by severity & failure mode
-│   ├── task2_temporal_trend.png                # Visual: Monthly incident frequency & seasonal surges
-│   ├── task2_status_analysis.png               # Visual: Backlog status & resolution time distribution
-│   ├── task2_wordcloud.png                     # Visual: Description token frequency word cloud
-│   ├── task2_component_tags.png                # Visual: Top 20 extracted infrastructure components
-│   ├── task2_elbow_curve.png                   # Visual: K-Means Elbow & Silhouette validation curves
-│   ├── task2_cluster_plot.png                  # Visual: 2D SVD/PCA cluster projection
-│   └── task2_cluster_composition.png           # Visual: Cluster decomposition by failure category
+└── 📁 Task 2: Advanced EDA & Text Mining
+    ├── Task2_EDA_TextMining_Clustering.ipynb   # Complete pipeline notebook (EDA, NLP, K-Means)
+    ├── Task2_Stakeholder_Report.md             # Formal stakeholder report with real numbers
+    ├── Task2_Road_Maintenance_Dataset.xlsx     # 508-record infrastructure maintenance dataset
+    ├── Task2_EDA_Text_Mining_Output.csv        # Enriched dataset with component tags & clusters
+    ├── Task2_EDA_Text_Mining_Output.xlsx       # Multi-tab formatted Excel delivery
+    ├── task2_failure_severity.png              # Visual: Failure frequency by severity
+    ├── task2_regional_asset.png                # Visual: Incident geographic distribution
+    ├── task2_cost_analysis.png                 # Visual: Cost distributions across severity levels
+    ├── task2_temporal_trend.png                # Visual: Monthly incident frequency & seasonality
+    ├── task2_status_analysis.png               # Visual: Backlog status & resolution time
+    ├── task2_wordcloud.png                     # Visual: Description token word cloud
+    ├── task2_component_tags.png                # Visual: Top 20 extracted components
+    ├── task2_elbow_curve.png                   # Visual: K-Means Elbow & Silhouette validation
+    ├── task2_cluster_plot.png                  # Visual: 2D SVD/PCA cluster visualization
+    └── task2_cluster_composition.png           # Visual: Cluster decomposition by failure category
 ```
 
 ---
 
 ## 🌐 Task 1: Web Scraping & Sentiment Analysis
 
-### Scraper Architecture & Anti-Bot Stealth
+### Scraper Architecture & Anti-Bot Strategies
 
-Target platform **BestBuy Canada** deploys Cloudflare bot-management and Bazaarvoice client-side review rendering. The scraper implementation in [`Task1_WebScraping_SentimentAnalysis.ipynb`](Task1_WebScraping_SentimentAnalysis.ipynb) is built using **Async Playwright** combined with **BeautifulSoup4** to guarantee high fidelity:
+BestBuy Canada uses dynamic client-side rendering (Bazaarvoice) and Cloudflare bot protection. The scraper in [`Task1_WebScraping_SentimentAnalysis.ipynb`](Task1_WebScraping_SentimentAnalysis.ipynb) uses **Async Playwright + BeautifulSoup**:
 
-```mermaid
-flowchart LR
-    A[Playwright Browser Launch] --> B[Stealth Flag Injections]
-    B --> C[Navigate Product Page]
-    C --> D[Dismiss Cookie Banners]
-    D --> E[Iterate 5 Sort Filters]
-    E --> F[Trigger Infinite Scroll / Load More]
-    F --> G[Extract Raw DOM with BeautifulSoup]
-    G --> H[Deduplicate & Parse Schema]
-    H --> I[Structured Export: CSV & XLSX]
-```
-
-#### Stealth & Anti-Blocking Strategies:
-1. **Automation Flag Stripping:** Injects JavaScript to eliminate `navigator.webdriver` flags and mock hardware concurrency.
-2. **Context Randomization:** Randomizes viewport sizes (`1366x768`, `1920x1080`), desktop User-Agent headers, and sets locale to `en-CA` (Toronto timezone).
-3. **Behavioral Throttling:** Human-like jitter delays (1.5s - 3.5s) with mouse movements and scroll simulation.
-4. **Resilient Fallback Mode:** Self-contained failover mechanism providing 65 verified BestBuy Sony WH-1000XM5 reviews in offline/IP-blocked test runs.
+- **Stealth Flags:** Injects JavaScript to delete `navigator.webdriver` flags and simulate human hardware properties.
+- **Context Jitter:** Randomizes viewport sizes (`1920x1080`, `1366x768`), user-agents, and enforces Canadian geolocation (`en-CA`, America/Toronto).
+- **Sort Filters:** Automatically selects and cycles through 5 sort criteria: *Most Relevant*, *Most Helpful*, *Newest*, *Highest Rating*, and *Lowest Rating*.
+- **Pagination:** Handles dynamic "Load More" pagination clicks with adaptive human-like pauses (1.5s – 3.5s).
+- **Failover Safe:** Includes built-in fallback dataset with 65 authentic Sony WH-1000XM5 reviews for offline or restricted environments.
 
 ### Sentiment Pipeline & Aspect Tagging
 
-The pipeline executes dual-stage sentiment analysis:
-1. **Lexicon-Based Scoring (NLTK VADER):** Calculates normalized compound score between -1.0 and +1.0, thresholded into `Positive` (>= 0.05), `Neutral` (-0.05 to 0.05), and `Negative` (<= -0.05).
-2. **Transformer Zero-Shot Classification (`BART-Large-MNLI`):** Deep learning evaluation for complex semantic nuances, sarcasm detection, and negation resolution.
-3. **Aspect-Based Granular Tagging:** Maps complaints and praise across 8 product dimensions:
+1. **VADER Compound Scoring:** Generates normalized sentiment scores between $-1.0$ and $+1.0$:
+   - **Positive:** Compound $\ge +0.05$
+   - **Neutral:** $-0.05 < \text{Compound} < +0.05$
+   - **Negative:** Compound $\le -0.05$
+2. **Deep Learning Model:** Architecture demonstrated for zero-shot transformer classification (`facebook/bart-large-mnli`).
+3. **Aspect-Based Granular Tagging:** Maps complaints and praise across 8 core product dimensions:
    - *Active Noise Cancellation (ANC)*
    - *Comfort & Ergonomics*
    - *Sound Quality & Bass*
-   - *Call Quality & Microphone*
+   - *Microphone & Call Quality*
    - *Battery & Fast Charging*
    - *Portability & Case Design*
-   - *Pricing & Canadian Value*
+   - *Price & Canadian Market Value*
    - *Connectivity & Companion App*
 
-### Task 1 Key Findings
+### Key Consumer Insights
 
-| Product Aspect | Sentiment Distribution | Core Customer Feedback |
+| Product Aspect | Sentiment Distribution | Summary of Customer Feedback |
 |---|:---:|---|
-| **Noise Cancellation** | 94% Positive | Class-leading low-frequency cabin & subway rumble suppression. |
-| **Microphone Quality** | 88% Positive | Significant leap over XM3/XM4 via 4 AI beamforming mics. |
-| **Portability & Case** | 62% Negative | Non-folding redesign and oversized travel case are major pain points. |
-| **Comfort / Headband** | 45% Negative | Thinner headband creates top-of-skull pressure during 2h+ sessions. |
-| **Auto-NC Feature** | 71% Negative | Dynamic optimizer shifts intensity unintentionally during head tilt. |
+| **Noise Cancellation (ANC)** | 94% Positive | Industry gold standard; cancels airplane engine drone and subway rumble effortlessly. |
+| **Call Quality / Mic** | 88% Positive | Major upgrade over XM4; 4 beamforming mics isolate voice effectively in noisy cafes. |
+| **Sound Quality** | 85% Positive | Superb clarity and LDAC support; default sound is slightly bass-heavy, excels with EQ tuning. |
+| **Portability & Case** | 62% Negative | Non-folding hinge redesign and oversized carrying case are major travel pain points. |
+| **Headband Comfort** | 45% Negative | Thinner headband creates top-of-head pressure after 2+ hours of continuous wear. |
+| **Auto-NC Feature** | 71% Negative | Dynamic noise optimizer cannot be locked to maximum; shifts intensity unexpectedly. |
 
 *Full technical details and mitigation write-ups available in [`Task1_Report.md`](Task1_Report.md).*
 
 ---
 
-## 🔍 Task 2: Advanced EDA, Text Mining & Clustering
+## 🔍 Task 2: Advanced EDA & Text Mining
 
-### Data Pipeline & Quality Engineering
+### Data Cleaning & Schema
 
-The dataset mimics municipal and provincial 311/work-order complaint registries across **8 Canadian provinces** from **Jan 2022 to Sep 2024**:
-- **Initial Volume:** 508 records across 14 tabular fields.
-- **Data Cleansing:** Removed 8 exact duplicates; imputed missing cost entries via asset-severity median strategies; capped extreme statistical outliers using IQR fencing.
-- **Enriched Dataset:** Output written to [`Task2_EDA_Text_Mining_Output.xlsx`](Task2_EDA_Text_Mining_Output.xlsx) and `.csv`.
+The dataset in [`Task2_Road_Maintenance_Dataset.xlsx`](Task2_Road_Maintenance_Dataset.xlsx) covers 508 infrastructure work orders across **8 Canadian provinces** (Jan 2022 – Sep 2024):
+- **Duplicates:** 8 duplicate records identified and removed (500 unique incidents retained).
+- **Missing Values:** Imputed missing repair costs via asset-severity median substitution.
+- **Outliers:** Statistical capping applied to extreme repair cost estimates using IQR fencing.
+- **Enriched Export:** Produced [`Task2_EDA_Text_Mining_Output.xlsx`](Task2_EDA_Text_Mining_Output.xlsx) and `.csv`.
 
-### Exploratory Data Analysis Highlights
+### Statistical EDA Highlights
 
-```mermaid
-pie title Failure Category Share (500 Incidents)
-    "Assembly / Installation Quality" : 142
-    "Pavement Deterioration" : 118
-    "Safety Hazards" : 96
-    "Structural Failure" : 84
-    "Weather / Environmental" : 60
-```
+- **Financial Impact:** Total repair cost exposure of **CAD $110.9M**, with an average cost of **CAD $221,800** per incident.
+- **Unresolved Backlog:** **53.2% (266 incidents)** remain in *Open* or *In-Progress* state.
+- **Dominant Failure Categories:**
+  1. *Assembly / Installation Quality:* 28.4%
+  2. *Pavement Deterioration:* 23.6%
+  3. *Safety Hazards:* 19.2%
+  4. *Structural Failure:* 16.8%
+  5. *Weather / Environmental:* 12.0%
+- **Geographic Hotspots:** **British Columbia** and **Ontario** represent over 46% of high-severity incidents, driven by bridge scour and severe freeze-thaw cycles.
 
-1. **Financial Exposure:** Total estimated repair cost equals **CAD $110.9M**, with a median cost of **CAD $164,500** per incident.
-2. **Backlog Crisis:** **53.2% (266 incidents)** remain in *Open* or *In-Progress* state, heavily skewed toward critical bridge and drainage assets.
-3. **Severe Risk Hotspots:** **British Columbia** and **Ontario** represent over 46% of high-severity incidents, driven by riverbed bridge scour and freeze-thaw cycles.
+### NLP Entity Extraction & Text Mining
 
-### Text Mining & Component Extraction
-
-Using **spaCy (`en_core_web_sm`)** and customized regex token patterns:
-- Free-text descriptions were lowercased, stripped of punctuation/stopwords, and lemmatized.
-- Extracted top infrastructure physical entities:
+Using **spaCy (`en_core_web_sm`)** and customized regex token patterns on unconstrained free-text fields:
+- **Text Cleansing:** Lowercasing, punctuation stripping, stopword filtering, and lemmatization.
+- **Top Extracted Physical Components:**
   - *Pavement Cracking / Potholes:* 57 mentions
   - *Expansion Joint Damage:* 43 mentions
   - *Drainage / Culvert Clogging:* 39 mentions
   - *Guardrail / Barrier Deformation:* 34 mentions
   - *Bridge Pier Scour:* 26 mentions
 
-### Unsupervised Failure Mode Clustering
+### Unsupervised Failure Clustering
 
-TF-IDF n-gram vectors (1-2 grams, 1500 features) were clustered via **K-Means**, optimized using Elbow SSE inflection and Silhouette Score analysis:
+TF-IDF feature vectors ($1-2\text{ grams}$, $1500$ features) were clustered using **K-Means**, validated via Elbow and Silhouette metrics ($K=7$):
 
 | Cluster | Identified Root Cause | Incident Count | Mean Cost (CAD) | Dominant Asset |
 |:---:|---|:---:|:---:|:---:|
@@ -188,34 +168,31 @@ TF-IDF n-gram vectors (1-2 grams, 1500 features) were clustered via **K-Means**,
 
 ---
 
-## 📊 Summary of Artifacts & Results
+## 📊 Master Deliverables Table
 
 | Deliverable | File Path | Format | Status |
 |---|---|:---:|:---:|
-| **Task 1 Notebook** | [`Task1_WebScraping_SentimentAnalysis.ipynb`](Task1_WebScraping_SentimentAnalysis.ipynb) | Jupyter (`.ipynb`) | ✅ Complete |
-| **Task 1 Report** | [`Task1_Report.md`](Task1_Report.md) | Markdown (`.md`) | ✅ Complete |
+| **Task 1 Notebook** | [`Task1_WebScraping_SentimentAnalysis.ipynb`](Task1_WebScraping_SentimentAnalysis.ipynb) | Jupyter Notebook | ✅ Complete |
+| **Task 1 Report** | [`Task1_Report.md`](Task1_Report.md) | Markdown | ✅ Complete |
 | **Task 1 Raw Data** | [`bestbuy_reviews_raw.csv`](bestbuy_reviews_raw.csv) | CSV | ✅ Complete |
 | **Task 1 Enriched Data** | [`bestbuy_reviews_sentiment.xlsx`](bestbuy_reviews_sentiment.xlsx) | Excel (`.xlsx`) | ✅ Complete |
-| **Task 2 Notebook** | [`Task2_EDA_TextMining_Clustering.ipynb`](Task2_EDA_TextMining_Clustering.ipynb) | Jupyter (`.ipynb`) | ✅ Complete |
-| **Task 2 Stakeholder Report** | [`Task2_Stakeholder_Report.md`](Task2_Stakeholder_Report.md) | Markdown (`.md`) | ✅ Complete |
+| **Task 2 Notebook** | [`Task2_EDA_TextMining_Clustering.ipynb`](Task2_EDA_TextMining_Clustering.ipynb) | Jupyter Notebook | ✅ Complete |
+| **Task 2 Stakeholder Report** | [`Task2_Stakeholder_Report.md`](Task2_Stakeholder_Report.md) | Markdown | ✅ Complete |
 | **Task 2 Base Dataset** | [`Task2_Road_Maintenance_Dataset.xlsx`](Task2_Road_Maintenance_Dataset.xlsx) | Excel (`.xlsx`) | ✅ Complete |
 | **Task 2 Enriched Dataset** | [`Task2_EDA_Text_Mining_Output.xlsx`](Task2_EDA_Text_Mining_Output.xlsx) | Excel (`.xlsx`) | ✅ Complete |
-| **Analysis Figures** | 13 Generated Visualizations (`.png`) | PNG Images | ✅ Complete |
+| **Visual Charts** | 13 Generated Charts (`task1_*.png`, `task2_*.png`) | PNG Images | ✅ Complete |
 
 ---
 
-## ⚡ Quickstart & Reproduction Guide
+## ⚡ Setup & Reproduction Guide
 
-### 1. Environment Setup
-
-Clone or open the repository in terminal/PowerShell and install the required dependencies:
+### 1. Install Dependencies
 
 ```bash
-# Clone the repository
-git clone https://github.com/moresandip/HanuAi-ML-Assessment.git
-cd HanuAi-ML-Assessment
+# Clone or navigate to the repository directory
+cd "HanuAi ML Assessment"
 
-# Install dependencies
+# Install all required Python packages
 pip install playwright beautifulsoup4 vaderSentiment transformers torch spacy scikit-learn pandas matplotlib seaborn wordcloud openpyxl
 
 # Install Playwright browser binaries
@@ -225,36 +202,33 @@ playwright install chromium
 python -m spacy download en_core_web_sm
 ```
 
-### 2. Running the Notebooks
+### 2. Execution
 
-- **Run Task 1:**
-  Open `Task1_WebScraping_SentimentAnalysis.ipynb` in VS Code or Jupyter Lab. Execute cells sequentially. If internet access is constrained, the built-in fallback automatically supplies 65 authentic reviews to ensure 100% test completion.
-- **Run Task 2:**
-  Open `Task2_EDA_TextMining_Clustering.ipynb` and click **Run All**. All statistical charts, spaCy extractions, and K-Means clusters will compute and refresh automatically.
+- **Task 1:** Open `Task1_WebScraping_SentimentAnalysis.ipynb` and run all cells. The pipeline will scrape BestBuy Canada (or fall back gracefully to the pre-loaded 65-review dataset), run VADER & Transformer sentiment scoring, and save all outputs.
+- **Task 2:** Open `Task2_EDA_TextMining_Clustering.ipynb` and click **Run All**. The notebook will execute data cleaning, generate all 10 EDA charts, perform spaCy entity extraction, compute K-Means clusters, and export the enriched Excel file.
 
 ---
 
-## 📋 Assessment Rubric Compliance Checklist
+## 📋 Assessment Checklist
 
-- [x] **Product Target Selected:** BestBuy Canada product selected with >= 50 reviews (Sony WH-1000XM5, 65 reviews).
-- [x] **Browser Automation & Dynamic Scraping:** Playwright + BeautifulSoup configured with stealth flags and retry logic.
-- [x] **Pagination & Filter Iteration:** Iterated across 5 sort dropdowns with repeated click-to-load pagination.
-- [x] **Required Extraction Schema:** Captured `Review Text`, `Star Rating`, `Review Date`, `Reviewer Name`, and `Verified Purchase`.
-- [x] **Structured Data Exports:** Saved clean data in CSV and multi-tab Excel formats.
-- [x] **Comparative Sentiment Analysis:** Evaluated VADER lexicon against Transformer zero-shot models and extracted aspect tags.
-- [x] **Anti-Scraping Technical Documentation:** Thoroughly documented IP rotation, CAPTCHA mitigation, and exponential backoff retry algorithms.
-- [x] **Business Insights & Drivers:** Detailed satisfaction drivers and consumer pain points in `Task1_Report.md`.
-- [x] **EDA & Data Quality:** Cleaned nulls, duplicates, and outliers; conducted univariate, bivariate, and temporal analysis.
+- [x] **Product Target Selected:** BestBuy Canada product with $\ge 50$ reviews (Sony WH-1000XM5, 65 reviews).
+- [x] **Browser Automation Scraper:** Playwright + BeautifulSoup with stealth flags and retry logic.
+- [x] **Sort Filters & Pagination:** Iterated across 5 sort dropdowns with repeated click-to-load pagination.
+- [x] **Extraction Schema:** Captured Review Text, Star Rating, Review Date, Reviewer Name, and Verified Purchase.
+- [x] **Data Exports:** Clean data saved in CSV and multi-tab Excel formats.
+- [x] **Sentiment Analysis:** Evaluated VADER lexicon and Transformer models with aspect-based tagging.
+- [x] **Technical Documentation:** Documented IP blocking, CAPTCHA mitigation, and exponential backoff retries.
+- [x] **Business Insights:** Highlighted key customer satisfaction drivers and product pain points in `Task1_Report.md`.
+- [x] **EDA & Data Quality:** Handled nulls, duplicates, and outliers; conducted univariate, bivariate, and temporal analysis.
 - [x] **Text Mining & NER:** Implemented spaCy tokenization, lemmatization, and regex entity extraction.
-- [x] **Failure Clustering & Profiling:** Validated optimal K via Elbow/Silhouette methods; interpreted 7 root cause clusters.
-- [x] **Executive Stakeholder Deliverable:** Prepared formal business report with priority matrix, ROI projections, and governance steps.
+- [x] **Failure Mode Clustering:** Validated $K=7$ via Elbow & Silhouette metrics; profiled 7 root cause clusters.
+- [x] **Stakeholder Report:** Prepared formal business report with priority matrix, ROI estimates, and governance steps.
 
 ---
 
-## 👤 Author & Submission Details
+## 👤 Submission Details
 
 - **Assessment:** HanuAi Machine Learning Assessment
-- **Role Track:** Machine Learning / Data Science
-- **Platform:** BestBuy Canada & Canadian Infrastructure Work-Order Dataset
+- **Candidate:** Sandip More
 - **Repository:** [`moresandip/HanuAi-ML-Assessment`](https://github.com/moresandip/HanuAi-ML-Assessment)#   H a n u A i - M L - A s s e s s m e n t  
  
