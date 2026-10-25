@@ -230,6 +230,4 @@ python -m spacy download en_core_web_sm
 
 - **Assessment:** HanuAi Machine Learning Assessment
 - **Candidate:** Sandip More
-- **Repository:** [`moresandip/HanuAi-ML-Assessment`](https://github.com/moresandip/HanuAi-ML-Assessment)#   H a n u A i - M L - A s s e s s m e n t  
- #   H a n u A i - M L - A s s e s s m e n t  
- 
+- **Repository:** [`moresandip/HanuAi-ML-Assessment`](https://github.com/moresandip/HanuAi-ML-Assessment)
